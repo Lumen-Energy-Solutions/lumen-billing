@@ -74,4 +74,7 @@ A continuación se detallan los pasos y requisitos formales para la correcta con
 - Es fundamental respetar la estructura de prefijos, perfiles y atributos para asegurar la correcta integración y visualización en Lumen Billing.
 - Para cualquier consulta o soporte, contactar a:
 
-  **Axl
+  **Axl Santos**  
+  axlsntz.dev@gmail.com
+
+---
