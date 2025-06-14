@@ -8,7 +8,11 @@ interface AuthState {
   user: IUser| null;
   token: string | null;
   isAuthenticated: boolean | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<{
+    user: IUser;
+    token: string;
+    isAuthenticated: boolean;
+  }>;
   refresh: () => Promise<void>;
   logout: () => void;
 }
@@ -27,7 +31,6 @@ export const useAuthStore = create<AuthState>()(
             username: email,
             password,
           });
-          console.log('Login response:', response.data); // Log the entire response
 
           const { data, token, success } = response.data;
 
@@ -42,7 +45,11 @@ export const useAuthStore = create<AuthState>()(
           });
 
 
-
+          return {
+            user: data,
+            token,
+            isAuthenticated: true,
+          }
         } catch (error) {
           console.error('Login failed:', error);
           throw error;
@@ -52,7 +59,6 @@ export const useAuthStore = create<AuthState>()(
       refresh: async () => {
         try {
           const response = await api.get('/auth/me');
-          console.log('Refresh token response:', response.data); // Log the entire response
 
           const { data, success, token } = response.data;
           if (!success) {

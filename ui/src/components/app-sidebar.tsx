@@ -2,9 +2,7 @@
 
 import * as React from "react"
 import {
-  Command,
-  LifeBuoy,
-  Send,
+  GalleryVerticalEnd,
 } from "lucide-react"
 
 import { NavSupport} from "@/components/nav-support"
@@ -33,8 +31,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               onClick={() => router.push("/")}
               size="lg" >
 
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <Command className="size-4" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-white text-primary-foreground border shadow-md p-2">
+                <GalleryVerticalEnd className="size-10 text-neutral-500" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">Lumen Billing</span>
