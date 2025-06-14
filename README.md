@@ -7,7 +7,7 @@ Lumen Billing es una aplicación para gestionar y calcular facturas basadas en d
 ## Estructura del Proyecto
 
 ```
-billing-app/
+lumen-billing/
 │
 ├── app/           # Backend en Go
 ├── ui/            # Frontend en Next.js
