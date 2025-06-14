@@ -1,59 +1,117 @@
 # Lumen Billing
 
-Lumen Billing es una aplicación que permite gestionar y calcular las facturas basadas en datos obtenidos de dispositivos IoT (medidores de agua, energía, etc.) mediante la API de ThingsBoard. El proyecto está dividido en dos partes: un servidor en Go y un cliente en React.
+Lumen Billing es una aplicación para gestionar y calcular facturas basadas en datos de dispositivos IoT (medidores de agua, energía, etc.) mediante la API de ThingsBoard. El proyecto incluye un backend en Go, un frontend en Next.js y una base de datos PostgreSQL, todo orquestado con Docker.
 
-## Contenido del Repositorio
+---
 
-- **Server**: Implementado en Go, este servidor utiliza Air para el desarrollo en caliente y se comunica con la API de ThingsBoard para obtener datos de dispositivos y gestionar la facturación.
-- **Client**: Cliente de la aplicación implementado en React, donde los usuarios pueden interactuar con las funcionalidades de facturación y visualización de dispositivos.
+## Estructura del Proyecto
 
-## Instalación
-
-### Server
-
-1. Clona este repositorio:
-   ```bash
-   git clone https://github.com/usuario/lumen-billing.git
-   cd lumen-billing/server
-    ```
-2. Instala **Go** si aun no lo tienes instalado.
-
-3. Instala Air para desarrollo en caliente:
-```bash 
-    go install github.com/cosmtrek/air@latest
 ```
-4. Configura las variables de entorno para la conexión con la API de ThingsBoard. Debes proporcionar las credenciales y la URL de la API.
-
-Crea un archivo .env en el directorio server con las siguientes variables:
-```env
-TB_API_URL=https://thingsboard.url
-TB_ACCESS_TOKEN=your_access_token
-```
-5. Inicia el servidor en modo desarrollo con Air:
-```bash 
-    npm run dev
+billing-app/
+│
+├── app/           # Backend en Go
+├── ui/            # Frontend en Next.js
+├── Dockerfile     # Imagen multi-stage para backend y frontend
+├── docker-compose.yml
+├── entrypoint.sh
+├── wait-for-it.sh
+└── README.md
 ```
 
-### Client
+---
 
-1. Ve al directorio del cliente:
-```bash 
-    cd lumen-billing/client
+## Requisitos Previos
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+---
+
+## Configuración Rápida
+
+### 1. Variables de Entorno
+
+Asegúrate de configurar las variables de entorno necesarias en el archivo `docker-compose.yml` para la base de datos y ThingsBoard.  
+Si necesitas variables adicionales para el frontend, puedes agregarlas en `ui/.env.local`.
+
+### 2. Construir y Levantar los Servicios
+
+Desde la raíz del proyecto, ejecuta:
+
+```sh
+docker compose up --build
 ```
 
-2. Instala las dependencias del proyecto:
-```bash 
-    npm install
-```
-3. Ejecuta la aplicación en modo desarrollo:
-```bash 
-    npm run dev
-```
+Esto hará lo siguiente:
 
-4. Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver la aplicación.
+- Construirá las imágenes del backend (Go) y frontend (Next.js).
+- Levantará la base de datos PostgreSQL.
+- Esperará a que la base de datos esté lista antes de iniciar el backend.
+- Iniciará el frontend en modo producción.
+
+### 3. Acceso a la Aplicación
+
+- **Frontend (Next.js):** [http://localhost:3000](http://localhost:3000)
+- **Backend (Go API):** [http://localhost:4001/api/v1](http://localhost:4001/api/v1)
+- **Base de datos (PostgreSQL):** puerto local `5434`, usuario y contraseña según `docker-compose.yml`.
+
+---
+
+## Flujo de Arranque
+
+1. **PostgreSQL** se inicia y crea la base de datos `billing`.
+2. El contenedor `app` espera a que la base de datos esté lista usando `wait-for-it.sh`.
+3. El backend Go se conecta a la base de datos y arranca en el puerto 4001.
+4. El frontend Next.js se inicia en el puerto 3000.
+5. El frontend puede comunicarse con el backend usando `/api/v1` gracias a la configuración de proxy en Next.js.
+
+---
+
+## Comandos Útiles
+
+- **Reconstruir todo desde cero (sin cache):**
+  ```sh
+  docker compose build --no-cache
+  docker compose up
+  ```
+
+- **Detener y eliminar los contenedores:**
+  ```sh
+  docker compose down
+  ```
+
+- **Ver logs de los servicios:**
+  ```sh
+  docker compose logs -f
+  ```
+
+---
+
+## Personalización
+
+- **Variables de entorno del backend:**  
+  Modifica las variables en la sección `environment` del servicio `app` en `docker-compose.yml`.
+
+- **Variables de entorno del frontend:**  
+  Puedes agregar variables en `ui/.env.local` y acceder a ellas en Next.js usando el prefijo `NEXT_PUBLIC_`.
+
+---
+
+## Notas
+
+- El backend y el frontend corren en el mismo contenedor y se comunican internamente usando `localhost`.
+- El backend espera a que la base de datos esté lista antes de arrancar, evitando errores de conexión temprana.
+- Si necesitas exponer la base de datos a herramientas externas, usa el puerto `5434` en tu máquina local.
+
+---
 
 ## Contribuciones
-Si deseas contribuir al proyecto, abre un pull request o crea un issue en el repositorio. Toda contribución es bienvenida.
+
+¡Toda contribución es bienvenida!  
+Abre un pull request o crea un issue en el repositorio.
+
+---
 
 ## Licencia
+
 Este proyecto está bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.
