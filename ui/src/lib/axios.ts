@@ -4,8 +4,8 @@ import axios from 'axios';
 import { getAuthToken } from '@/stores/auth.store';
 import config from '@/config';
 
-const api = axios.create({
-  baseURL:(typeof window !== 'undefined' && window.location.hostname) ? `http://${window.location.hostname}:${process.env.PORT || 4001}/api/v1` : config.api.uri,
+export const api = axios.create({
+  baseURL:"/api/v1",
 });
 
 api.interceptors.request.use((config) => {

@@ -10,6 +10,6 @@ import (
 func RegisterExportRoutes(r *gin.RouterGroup) {
 	export := r.Group("/export", middleware.AuthMiddleware)
 	{
-		export.POST("/", handlers.ExportHandler)
+		export.POST("", handlers.ExportHandler)
 	}
 }
